@@ -1,0 +1,75 @@
+---
+title: "First_Script"
+author: "Minuka Hewapathirana"
+date: "August 15, 2023"
+output: pdf_document
+---
+```{r, global_options, eval=TRUE, echo=FALSE, cache=TRUE}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=80), tidy = TRUE, fig.align='center',
+               cache=FALSE, collapse=TRUE, echo=FALSE, eval=FALSE, include=FALSE,
+               message=FALSE, quietly=TRUE, results='hide', warn.conflicts=FALSE, 
+               warning=FALSE)
+```
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Project Name Setting:
+```{r}
+analysis <- "BeePollen"
+```
+
+Source our custom R scripts:    
+For this we will use the rprojroot package to set the directory structures. This will help us when finding our files to source functions. We specify ours is an RStudio project. The root object contains a function that will help us locate our package R files regardless of our current working directory.
+```{r sourcing_my_functions, echo=FALSE, eval=TRUE, include=FALSE, cache=TRUE}
+library("rprojroot")
+root <- rprojroot::is_rstudio_project
+
+scriptsPath <- root$make_fix_file(".")("R")
+scripts  <- dir(root$find_file("R", path = root$find_file()))
+scriptsList <- paste(scriptsPath, scripts, sep = "//")
+lapply(scriptsList, source)
+
+scriptsPyPath <- root$make_fix_file(".")("pythonScripts")
+dir.create(scriptsPyPath, showWarnings = TRUE, recursive = TRUE)
+scriptsPy <- dir(root$find_file(scriptsPyPath, path = root$find_file()))
+scriptsPyList <- paste(scriptsPyPath, scriptsPy, sep = "//")
+
+imagePath <- root$make_fix_file(".")(paste("r_environments", analysis, sep = "/"))
+dir.create(imagePath, showWarnings = TRUE, recursive = TRUE)
+images <- dir(root$find_file(imagePath, path = root$find_file())) # if there is already a data file in this directory if not running this for the first time
+imagesList <- paste(imagePath, images, sep = "/")
+imagesList
+load(imagesList[1]) # you need to be specific if you have more than one image saved in this directory
+```
+
+Record the path to the environment images directory:
+```{r importChptImage, echo=TRUE, eval=TRUE, include=FALSE, cache=TRUE}
+library("rprojroot")
+sharedPath <- root$make_fix_file(".")("PIRL_working_directory")
+dir.create(sharedPath, showWarnings = TRUE, recursive = TRUE)
+sharedPathDirs <- dir(root$find_file(sharedPath, path = root$find_file()))
+sharedPathAn <- paste(sharedPath, analysis, sep = "/")
+dir.create(sharedPathAn, showWarnings = TRUE, recursive = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
