@@ -24,6 +24,7 @@ Source our custom R scripts:
 For this we will use the rprojroot package to set the directory structures. This will help us when finding our files to source functions. We specify ours is an RStudio project. The root object contains a function that will help us locate our package R files regardless of our current working directory.
 ```{r sourcing_my_functions, echo=FALSE, eval=TRUE, include=FALSE, cache=TRUE}
 library("rprojroot")
+library("Biostrings")
 root <- rprojroot::is_rstudio_project
 
 scriptsPath <- root$make_fix_file(".")("R")
@@ -31,6 +32,7 @@ scripts  <- dir(root$find_file("R", path = root$find_file()))
 scriptsList <- paste(scriptsPath, scripts, sep = "//")
 lapply(scriptsList, source)
 
+#not using python scripts yet 
 scriptsPyPath <- root$make_fix_file(".")("pythonScripts")
 dir.create(scriptsPyPath, showWarnings = TRUE, recursive = TRUE)
 scriptsPy <- dir(root$find_file(scriptsPyPath, path = root$find_file()))
@@ -39,7 +41,9 @@ scriptsPyList <- paste(scriptsPyPath, scriptsPy, sep = "//")
 imagePath <- root$make_fix_file(".")(paste("r_environments", analysis, sep = "/"))
 dir.create(imagePath, showWarnings = TRUE, recursive = TRUE)
 images <- dir(root$find_file(imagePath, path = root$find_file())) # if there is already a data file in this directory if not running this for the first time
-imagesList <- paste(imagePath, images, sep = "/")
+imageA <- "Beepollen.RData"
+save.image(paste(imagePath, imageA, sep = "/"))
+imagesList <- paste(imagePath, imageA, sep = "/")
 imagesList
 load(imagesList[1]) # you need to be specific if you have more than one image saved in this directory
 ```
