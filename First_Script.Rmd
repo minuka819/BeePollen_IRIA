@@ -20,6 +20,22 @@ Project Name Setting:
 analysis <- "BeePollen"
 ```
 
+Quick load
+```{r}
+analysis <- "BeePollen"
+
+library("rprojroot")
+
+root <- rprojroot::is_rstudio_project
+
+imagePath <- root$make_fix_file(".")(paste("r_environments", analysis, sep = "/"))
+
+imageA <- dir(root$find_file(imagePath, path = root$find_file()))
+
+load(paste(imagePath,imageA,sep = "/")) 
+
+```
+
 Source our custom R scripts:    
 For this we will use the rprojroot package to set the directory structures. This will help us when finding our files to source functions. We specify ours is an RStudio project. The root object contains a function that will help us locate our package R files regardless of our current working directory.
 ```{r sourcing_my_functions, echo=FALSE, eval=TRUE, include=FALSE, cache=TRUE}
@@ -40,12 +56,13 @@ scriptsPyList <- paste(scriptsPyPath, scriptsPy, sep = "//")
 
 imagePath <- root$make_fix_file(".")(paste("r_environments", analysis, sep = "/"))
 dir.create(imagePath, showWarnings = TRUE, recursive = TRUE)
-images <- dir(root$find_file(imagePath, path = root$find_file())) # if there is already a data file in this directory if not running this for the first time
-imageA <- "Beepollen.RData"
+imageA <- dir(root$find_file(imagePath, path = root$find_file())) # if there is already a data file in this directory if not running this for the first time
+
+imagesList<- list(paste(imagePath,imageA,sep="/"))
+#save the image
 save.image(paste(imagePath, imageA, sep = "/"))
-imagesList <- paste(imagePath, imageA, sep = "/")
-imagesList
-load(imagesList[1]) # you need to be specific if you have more than one image saved in this directory
+#imageLocation <
+load(paste(imagePath,imageA,sep = "/")) # you need to be specific if you have more than one image saved in this directory
 ```
 
 Record the path to the environment images directory:
@@ -56,24 +73,20 @@ dir.create(sharedPath, showWarnings = TRUE, recursive = TRUE)
 sharedPathDirs <- dir(root$find_file(sharedPath, path = root$find_file()))
 sharedPathAn <- paste(sharedPath, analysis, sep = "/")
 dir.create(sharedPathAn, showWarnings = TRUE, recursive = TRUE)
+
+#my own path to my metadata table
+
+myPirlWD <- "isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/PIRL_working_directory/BeePollenAnalysis"
 ```
 
-## R Markdown
+Importing premade metdata
+```{r importChptImage, echo=TRUE, eval=TRUE, include=FALSE, cache=TRUE}
+library("data.table")
+library("readr")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+metadataLocation <- paste(sharedPath,"metadataTables","Metadata_BCC_BCF_ITS1F_20222_05_16_Run.csv", sep="/")
+FirstTable <- read_csv(metadataLocation)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
