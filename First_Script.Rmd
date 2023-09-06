@@ -84,8 +84,9 @@ Importing premade metdata
 library("data.table")
 library("readr")
 
+save.image(paste(imagePath, imageA, sep = "/"))
 
-metadataLocation <- paste(sharedPath,"metadataTables","Metadata_BCC_BCF_ITS1F_20222_05_16_Run.csv", sep="/")
+metadataLocation <- paste(myPirlWD,"metadataTables","Metadata_BCC_BCF_ITS1F_2022_05_16_Run.csv", sep="/")
 FirstTable <- read_csv(metadataLocation)
 ```
 
