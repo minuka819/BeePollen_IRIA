@@ -10,11 +10,11 @@ MakeQsubs <- function(cmd, prefix, suffix = ".sub", node =1) {
   outPath <- paste(sharedPathAn, prefix, "/", sep="")
   for(k in 1:length(cmd)) {
     cat(paste("#!/bin/bash \n",
-              "#$ -S /bin/bash
-              # Ensure .e and .o and other output files go to working directory
-              #$ -cwd
-              # Request one slot in the smp environment
-              #$ -pe smp ", node, "\n",
+              "#$ -S /bin/bash \n",
+              "# Ensure .e and .o and other output files go to working directory \n",
+              "#$ -cwd \n",
+              "# Request one slot in the smp environment \n",
+              "#$ -pe smp ", node, "\n",
               "# Actual linux command for qsub \n",
               cmd[k],
               sep=""),
