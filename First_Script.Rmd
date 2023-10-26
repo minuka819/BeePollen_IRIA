@@ -83,8 +83,82 @@ library("readr")
 
 save.image(paste(imagePath, imageA, sep = "/"))
 
-metadataLocation <- "/home/CFIA-ACIA/hewapathiranam/GitHub_Repos/BeePollen_IRIA/Metadata/Metadata_BCC_BCF_ITS1F_2022_05_16_Run.csv"
+metadataLocation <- "/home/CFIA-ACIA/hewapathiranam/GitHub_Repos/BeePollen_IRIA/Metadata/"
 BCC_ITS1F_Metadata <- read_csv(metadataLocation)
+```
+
+Qsub for training classifier 
+```{r importChptImage, echo=TRUE, eval=TRUE, include=FALSE, cache=TRUE}
+# QSub Format 
+prefix <- "training_ITS_UNITE_Classifier"
+cmd <- paste("conda activate qiime2-amplicon-2023.9
+python /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/QIIME2_ITS/train_unite_classifier_qiime2.py \
+    -u https://files.plutof.ut.ee/public/orig/59/12/591225E8985EFC44B595C79AF5F467421B4D9A95093A0811B13CB4CC13A6DA46.tgz \
+    -o '/isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/WorkingDirectory/Classifiers' \ ")
+
+
+suffix <- ".sub"; cat(bashDirections); 
+MakeQsubs(cmd, prefix, suffix)
+```
+
+Testing Qsub Script modification  
+```{r importChptImage, echo=TRUE, eval=TRUE, include=FALSE, cache=TRUE}
+# QSub Format 
+prefix <- "testing"
+cmd <- paste("conda activate qiime2-amplicon-2023.9
+python /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/QIIME2_ITS/train_unite_classifier_qiime2.py \
+    -u https://files.plutof.ut.ee/public/orig/59/12/591225E8985EFC44B595C79AF5F467421B4D9A95093A0811B13CB4CC13A6DA46.tgz \
+    -o '/isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/WorkingDirectory/Classifiers' \ ")
+
+
+suffix <- ".sub"; cat(bashDirections); 
+MakeQsubs(cmd, prefix, suffix,node =16)
+```
+
+Qsub for QIIME2
+```{r importChptImage, echo=TRUE, eval=TRUE, include=FALSE, cache=TRUE}
+
+# cd QIIME2_ITS
+# conda activate qiime2-2023.5
+# python /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/QIIME2_ITS/qiime2_its.py \
+# -q qiime2-2023.5  \
+# -i /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/PIRL_working_directory/BeePollenAnalysis/fastqStorage_temp/IRIA__BCC_ITS1F\
+# -o /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/PIRL_working_directory/BeePollenAnalysis/BEE_ITSxpress\
+# -m /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/Metadata/Metadata_pooled.tsv \
+# -c /home/herve/QIIME2_ITS/db_unite_fungi/unite-ver9-99-classifier-29.11.2022.qza \
+# --min-len 150 \
+# --max-len 400 \
+# -t 16 \
+# -p 4 \
+# -se \
+# --extract-its1 \
+# --taxa Fungi 
+
+
+# QSub Format 
+prefix <- "qiime2ProcessingNEW"
+cmd <- paste("conda activate qiime2-2022 \
+python /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/QIIME2_ITS/qiime2_its.py \
+-q qiime2-2022 \
+-i /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/PIRL_working_directory/BeePollenAnalysis/fastqStorage_temp/IRIA__BCC_ITS1F \
+-o /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/WorkingDirectory/Outputs \
+-m /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/Metadata/Metadata_pooled.tsv \
+-c /isilon/CFIA-ACIA_projects/girouxeml/hewapathiranam/GitHub_Repos/BeePollen_IRIA/WorkingDirectory/Classifiers/unite-ver8-99-classifier.qza \
+--min-len 150 \
+--max-len 400 \
+-t 16 \
+-p 4 \
+-se \
+--extract-its1 \
+--taxa Fungi ")
+
+
+suffix <- ".sub"; cat(bashDirections); 
+MakeQsubs(cmd, prefix, suffix)
+```
+
+
+
 ```
 
 
